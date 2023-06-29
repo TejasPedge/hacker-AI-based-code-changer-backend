@@ -1,9 +1,19 @@
 require('dotenv').config(); // Load environment variables from .env file
 const cors = require('cors');
+const rateLimit = require("express-rate-limit");
 const express = require('express');
 const {Configuration, OpenAIApi} = require('openai');
 const app = express();
 const port = 8080;
+
+// Rate limit configuration
+const limiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour in milliseconds
+  max: 10, // Max number of requests per hour
+  message: "Rate limit exceed Too many requests from this IP, please try again 1 hour.",
+});
+
+app.use(limiter);
 // Enable CORS
 app.use(cors());
 app.use(express.json());
